@@ -1,0 +1,38 @@
+.app-header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center; /* ✅ this keeps headings centered */
+  }
+  
+  .app-header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  
+  .username-text {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 12px;
+  }
+  
+  .app-header nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .nav-btn {
+    background-color: #17a2b8;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
