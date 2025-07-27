@@ -48,17 +48,10 @@ public class SpringSecurity {
                                 .requestMatchers("/public/**").permitAll()
                                 .requestMatchers( "/api/qna/ask").hasAnyRole("USER","ADMIN")
                                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()// Public access
-                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 🛡️ Allow preflight!
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 🛡Allow preflight!
                                 .requestMatchers("/api/document/**","/api/user").hasRole("ADMIN")
-                                .requestMatchers("/error").permitAll()// Admin-only
-                                .requestMatchers(
-                                        "/swagger-ui/**",
-                                        "/swagger-ui.html",
-                                        "/v3/api-docs/**",
-                                        "/v3/api-docs/swagger-config",
-                                        "/favicon.ico",
-                                        "/error"
-                                ).permitAll()
+                                .requestMatchers("/error").permitAll()
+
 
                                 .anyRequest().authenticated()
                         // Everything else: auth required
@@ -69,31 +62,6 @@ public class SpringSecurity {
                 .build();
     }
 
-    /**
-     * HttpSecurity http
-     *      │
-     *      ▼
-     * authorizeHttpRequests(...)  ← Configures authorization rules
-     *      │
-     *      ▼
-     *    authz (lambda)
-     *      ├── requestMatchers("/hello").permitAll()
-     *      └── anyRequest().authenticated()
-     *      │
-     *      ▼
-     *   Returns modified HttpSecurity
-     *      │
-     *      ▼
-     *    formLogin(...)  ← Configures login form
-     *      │
-     *      ▼
-     *    Returns modified HttpSecurity
-     *      │
-     *      ▼
-     *    build()         ← Builds and returns SecurityFilterChain
-     *    session cookie jsessionid is used to manage the session automatically by SS.
-     *
-     */
 
 
     @Bean
@@ -124,50 +92,3 @@ public class SpringSecurity {
     }
 
 }
-/**
- *    | Component                      | Purpose                                                               |
- *   | ------------------------------ | --------------------------------------------------------------------- |
- *   | `AuthenticationManager`        | Handles login authentication — verifies username/password credentials |
- *   | `AuthenticationManagerBuilder` | Used to build the `AuthenticationManager` with your configuration     |
- *   | `UserDetailsService`           | A service that loads user data (e.g., from a DB) by username          |
- *   | `PasswordEncoder`              | Securely hashes passwords (BCrypt is a strong industry standard)      |
- *
- *
- *   | Line                                  | Action                                                                   |
- *   | ------------------------------------- | ------------------------------------------------------------------------ |
- *   | `http.getSharedObject(...)`           | Accesses internal `AuthenticationManagerBuilder` used by Spring Security |
- *   | `authBuilder.userDetailsService(...)` | Tells Spring where to load user credentials from                         |
- *   | `authBuilder.passwordEncoder(...)`    | Tells Spring how to hash and check passwords securely                    |
- *   | `return authBuilder.build();`         | Returns a fully built `AuthenticationManager` with all settings applied  |
- *   | `BCryptPasswordEncoder()`             | Uses bcrypt, a secure hashing algorithm, to encode user passwords        |
- *
- *             ┌─────────────────────────────┐
- *             │     HttpSecurity (injected) │
- *             └────────────┬────────────────┘
- *                          │
- *                          ▼
- *          ┌────────────────────────────────────┐
- *          │ getSharedObject(AuthenticationManagerBuilder.class) │
- *          └────────────────────────────────────┘
- *                          │
- *                          ▼
- *      ┌──────────────────────────────────────┐
- *      │   AuthenticationManagerBuilder       │
- *      └──────────────────────────────────────┘
- *                          │
- *                          ├── set UserDetailsService → customUserDetailsService
- *                          │
- *                          └── set PasswordEncoder → BCryptPasswordEncoder
- *                          │
- *                          ▼
- *         ┌─────────────────────────────────┐
- *         │     build()                     │
- *         │  (creates AuthenticationManager)│
- *         └─────────────────────────────────┘
- *                          │
- *                          ▼
- *           ┌─────────────────────────────┐
- *           │ AuthenticationManager (Bean)│
- *           └─────────────────────────────┘
- */
-//spring security hierarchy

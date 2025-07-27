@@ -4,15 +4,19 @@ import com.example.document_search_bot.dto.UserDtoRes;
 import com.example.document_search_bot.entity.User;
 import com.example.document_search_bot.service.CustomUserDetailsServiceImpl;
 import com.example.document_search_bot.service.UserService;
+import com.example.document_search_bot.util.EmbeddingUtil;
 import com.example.document_search_bot.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/public")
@@ -24,7 +28,8 @@ public class PublicController {
     @Autowired
     @Lazy
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private EmbeddingUtil embeddings;
     @Autowired
     private JwtUtil jwtUtil;
     @GetMapping("/health-check")
@@ -54,4 +59,13 @@ public class PublicController {
         }
     }
 
+
+    @GetMapping("/embed/{text}")
+    public  HttpEntity<? extends Object> Embed(@PathVariable String text){
+        try {
+               return new ResponseEntity<>(embeddings.getEmbeddings(text),HttpStatus.OK) ;
+        } catch (Exception e) {
+            return new ResponseEntity<>("incorrect username or password",HttpStatus.BAD_REQUEST);
+        }
+    }
 }
